@@ -23,4 +23,27 @@ const login = async (userInfo: UserLogin) => {
   }
 };
 
-export { login };
+const signup = async (userInfo: UserLogin) => {
+  try {
+    const response = await fetch('/auth/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userInfo),
+    });
+
+    const data = await response.json(); // is the token
+
+    if (!response.ok) {
+      throw new Error('Error creating user, please try again.');
+    }
+
+    return data;
+  } catch (err) {
+    console.log('Error from user signup: ', err);
+    return Promise.reject('Could not create user');
+  }
+};
+
+export { login, signup };
