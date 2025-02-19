@@ -22,22 +22,13 @@ export class User
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 
-  // Add method to verify password
   public async checkPassword(loginPassword: string): Promise<boolean> {
     return bcrypt.compare(loginPassword, this.password);
   }
 
-  // Hash the password before saving the user
   public async setPassword(password: string) {
     const saltRounds = 10;
     this.password = await bcrypt.hash(password, saltRounds);
-  }
-
-  // Add a method to get user data without password
-  public toJSON(): object {
-    const values = { ...this.get() };
-    delete values.password;
-    return values;
   }
 }
 
@@ -53,24 +44,15 @@ export function UserFactory(sequelize: Sequelize): typeof User {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
-        validate: {
-          len: [3, 30],
-        }
       },
       email: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
-        validate: {
-          isEmail: true,
-        }
       },
       password: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-          len: [8, 100],
-        }
       },
     },
     {

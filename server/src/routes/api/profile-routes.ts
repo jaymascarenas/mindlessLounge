@@ -1,14 +1,24 @@
-import { Router } from 'express';
-import { Profile, User } from '../../models';
-import auth from '../../middleware/auth';
+import { Router, Request, Response } from 'express';
+import { User, Profile } from '../../models/index.js';
+import { authenticateToken } from '../../middleware/auth.js';
 
 const router = Router();
 
 // GET /api/profile - Get current user's profile
-router.get('/', auth, async (req, res) => {
+router.get('/', authenticateToken, async (req: Request, res: Response) => {
   try {
+    const username = req.user?.username;
+    if (!username) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    const user = await User.findOne({ where: { username } });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
     const profile = await Profile.findOne({
-      where: { userId: req.session.userId },
+      where: { userId: user.id },
       include: [{ model: User, as: 'user', attributes: ['username', 'email'] }]
     });
 
@@ -16,44 +26,49 @@ router.get('/', auth, async (req, res) => {
       return res.status(404).json({ message: 'Profile not found' });
     }
 
-    res.json(profile);
+    return res.json(profile);
   } catch (err) {
-    res.status(500).json({ message: 'Server error', error: err });
+    return res.status(500).json({ message: 'Server error', error: err });
   }
 });
 
 // POST /api/profile - Create or update user profile
-router.post('/', auth, async (req, res) => {
+router.post('/', authenticateToken, async (req: Request, res: Response) => {
   try {
-    const { bio, profilePicture, interests } = req.body;
+    const username = req.user?.username;
+    if (!username) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    const user = await User.findOne({ where: { username } });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const { bio } = req.body;
 
     const [profile, created] = await Profile.findOrCreate({
-      where: { userId: req.session.userId },
+      where: { userId: user.id },
       defaults: {
         bio: bio || '',
-        profilePicture: profilePicture || null,
-        interests: interests || [],
-        userId: req.session.userId
+        userId: user.id
       }
     });
 
     if (!created) {
-      // Update existing profile
       await profile.update({
-        bio: bio || profile.bio,
-        profilePicture: profilePicture || profile.profilePicture,
-        interests: interests || profile.interests
+        bio: bio || profile.bio
       });
     }
 
-    res.json(profile);
+    return res.json(profile);
   } catch (err) {
-    res.status(500).json({ message: 'Server error', error: err });
+    return res.status(500).json({ message: 'Server error', error: err });
   }
 });
 
 // GET /api/profile/:username - Get profile by username
-router.get('/:username', async (req, res) => {
+router.get('/:username', async (req: Request, res: Response) => {
   try {
     const user = await User.findOne({
       where: { username: req.params.username },
@@ -73,27 +88,9 @@ router.get('/:username', async (req, res) => {
       return res.status(404).json({ message: 'Profile not found' });
     }
 
-    res.json(profile);
+    return res.json(profile);
   } catch (err) {
-    res.status(500).json({ message: 'Server error', error: err });
-  }
-});
-
-// DELETE /api/profile - Delete user profile
-router.delete('/', auth, async (req, res) => {
-  try {
-    const profile = await Profile.findOne({
-      where: { userId: req.session.userId }
-    });
-
-    if (!profile) {
-      return res.status(404).json({ message: 'Profile not found' });
-    }
-
-    await profile.destroy();
-    res.json({ message: 'Profile deleted successfully' });
-  } catch (err) {
-    res.status(500).json({ message: 'Server error', error: err });
+    return res.status(500).json({ message: 'Server error', error: err });
   }
 });
 

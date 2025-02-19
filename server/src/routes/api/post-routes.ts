@@ -1,131 +1,118 @@
-import { Router } from 'express';
-import { Post, User, Profile } from '../../models';
-import auth from '../../middleware/auth';
+import { Router, Request, Response } from 'express';
+import { User, Post } from '../../models/index.js';
+import { authenticateToken } from '../../middleware/auth.js';
 
 const router = Router();
 
 // GET /api/posts - Get all posts
-router.get('/', async (req, res) => {
+router.get('/', async (_req: Request, res: Response) => {
   try {
     const posts = await Post.findAll({
       include: [{
         model: User,
         as: 'user',
-        attributes: ['username'],
-        include: [{
-          model: Profile,
-          as: 'profile',
-          attributes: ['profilePicture']
-        }]
+        attributes: ['username']
       }],
       order: [['createdAt', 'DESC']]
     });
 
-    res.json(posts);
+    return res.json(posts);
   } catch (err) {
-    res.status(500).json({ message: 'Server error', error: err });
+    return res.status(500).json({ message: 'Server error', error: err });
   }
 });
 
 // POST /api/posts - Create a new post
-router.post('/', auth, async (req, res) => {
+router.post('/', authenticateToken, async (req: Request, res: Response) => {
   try {
-    const { content, mediaUrl } = req.body;
+    const { content } = req.body;
+    const username = req.user?.username;
+
+    if (!username) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    const user = await User.findOne({ where: { username } });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
 
     const post = await Post.create({
       content,
-      mediaUrl,
-      userId: req.session.userId
+      userId: user.id
     });
 
-    // Fetch the created post with user info
     const postWithUser = await Post.findByPk(post.id, {
       include: [{
         model: User,
         as: 'user',
-        attributes: ['username'],
-        include: [{
-          model: Profile,
-          as: 'profile',
-          attributes: ['profilePicture']
-        }]
+        attributes: ['username']
       }]
     });
 
-    res.json(postWithUser);
+    return res.json(postWithUser);
   } catch (err) {
-    res.status(500).json({ message: 'Server error', error: err });
-  }
-});
-
-// GET /api/posts/:id - Get a specific post
-router.get('/:id', async (req, res) => {
-  try {
-    const post = await Post.findByPk(req.params.id, {
-      include: [{
-        model: User,
-        as: 'user',
-        attributes: ['username'],
-        include: [{
-          model: Profile,
-          as: 'profile',
-          attributes: ['profilePicture']
-        }]
-      }]
-    });
-
-    if (!post) {
-      return res.status(404).json({ message: 'Post not found' });
-    }
-
-    res.json(post);
-  } catch (err) {
-    res.status(500).json({ message: 'Server error', error: err });
+    return res.status(500).json({ message: 'Server error', error: err });
   }
 });
 
 // PUT /api/posts/:id - Update a post
-router.put('/:id', auth, async (req, res) => {
+router.put('/:id', authenticateToken, async (req: Request, res: Response) => {
   try {
-    const post = await Post.findByPk(req.params.id);
+    const username = req.user?.username;
+    if (!username) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
 
+    const user = await User.findOne({ where: { username } });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const post = await Post.findByPk(req.params.id);
     if (!post) {
       return res.status(404).json({ message: 'Post not found' });
     }
 
-    if (post.userId !== req.session.userId) {
+    if (post.userId !== user.id) {
       return res.status(403).json({ message: 'Not authorized to update this post' });
     }
 
-    const { content, mediaUrl } = req.body;
-    await post.update({
-      content: content || post.content,
-      mediaUrl: mediaUrl || post.mediaUrl
-    });
+    const { content } = req.body;
+    await post.update({ content });
 
-    res.json(post);
+    return res.json(post);
   } catch (err) {
-    res.status(500).json({ message: 'Server error', error: err });
+    return res.status(500).json({ message: 'Server error', error: err });
   }
 });
 
 // DELETE /api/posts/:id - Delete a post
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', authenticateToken, async (req: Request, res: Response) => {
   try {
-    const post = await Post.findByPk(req.params.id);
+    const username = req.user?.username;
+    if (!username) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
 
+    const user = await User.findOne({ where: { username } });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const post = await Post.findByPk(req.params.id);
     if (!post) {
       return res.status(404).json({ message: 'Post not found' });
     }
 
-    if (post.userId !== req.session.userId) {
+    if (post.userId !== user.id) {
       return res.status(403).json({ message: 'Not authorized to delete this post' });
     }
 
     await post.destroy();
-    res.json({ message: 'Post deleted successfully' });
+    return res.json({ message: 'Post deleted successfully' });
   } catch (err) {
-    res.status(500).json({ message: 'Server error', error: err });
+    return res.status(500).json({ message: 'Server error', error: err });
   }
 });
 
