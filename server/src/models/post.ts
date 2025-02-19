@@ -3,7 +3,6 @@ import { DataTypes, type Sequelize, Model, type Optional } from 'sequelize';
 interface PostAttributes {
   id: number;
   content: string;
-  mediaUrl?: string;
   userId: number;
 }
 
@@ -15,7 +14,6 @@ export class Post
 {
   public id!: number;
   public content!: string;
-  public mediaUrl!: string | null;
   public userId!: number;
 
   public readonly createdAt!: Date;
@@ -33,10 +31,6 @@ export function PostFactory(sequelize: Sequelize): typeof Post {
       content: {
         type: DataTypes.TEXT,
         allowNull: false,
-      },
-      mediaUrl: {
-        type: DataTypes.STRING,
-        allowNull: true,
       },
       userId: {
         type: DataTypes.INTEGER,
