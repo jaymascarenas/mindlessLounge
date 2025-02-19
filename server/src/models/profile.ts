@@ -3,8 +3,6 @@ import { DataTypes, type Sequelize, Model, type Optional } from 'sequelize';
 interface ProfileAttributes {
   id: number;
   bio: string;
-  profilePicture?: string;
-  interests: string[];
   userId: number;
 }
 
@@ -16,8 +14,6 @@ export class Profile
 {
   public id!: number;
   public bio!: string;
-  public profilePicture!: string | null;
-  public interests!: string[];
   public userId!: number;
 
   public readonly createdAt!: Date;
@@ -36,15 +32,6 @@ export function ProfileFactory(sequelize: Sequelize): typeof Profile {
         type: DataTypes.TEXT,
         allowNull: false,
         defaultValue: '',
-      },
-      profilePicture: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      interests: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
-        allowNull: false,
-        defaultValue: [],
       },
       userId: {
         type: DataTypes.INTEGER,

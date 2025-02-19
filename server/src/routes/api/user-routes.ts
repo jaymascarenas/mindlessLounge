@@ -1,82 +1,201 @@
-import express from 'express';
-import type { Request, Response } from 'express';
-import { User } from '../../models/index.js';
+import { Router, Request, Response } from 'express';
+import { User, Profile } from '../../models/index.js';
+import { authenticateToken } from '../../middleware/auth.js';
+import jwt from 'jsonwebtoken';
 
-const router = express.Router();
+const router = Router();
 
-// GET /users - Get all users
-router.get('/', async (_req: Request, res: Response) => {
+// POST /api/users/register - Register a new user
+router.post('/register', async (req: Request, res: Response) => {
   try {
-    const users = await User.findAll({
-      attributes: { exclude: ['password'] }
+    const { username, email, password } = req.body;
+
+    // Check if username or email already exists
+    const existingUser = await User.findOne({
+      where: {
+        username,
+      },
     });
-    res.json(users);
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
-});
 
-// GET /users/:id - Get a user by id
-router.get('/:id', async (req: Request, res: Response) => {
-  const { id } = req.params;
-  try {
-    const user = await User.findByPk(id, {
-      attributes: { exclude: ['password'] }
+    if (existingUser) {
+      return res.status(400).json({ message: 'Username already exists' });
+    }
+
+    const existingEmail = await User.findOne({
+      where: {
+        email,
+      },
     });
-    if (user) {
-      res.json(user);
-    } else {
-      res.status(404).json({ message: 'User not found' });
+
+    if (existingEmail) {
+      return res.status(400).json({ message: 'Email already exists' });
     }
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
+
+    // Create the user
+    const user = await User.create({
+      username,
+      email,
+      password,
+    });
+
+    // Create an empty profile for the user
+    await Profile.create({
+      userId: user.id,
+      bio: '',
+    });
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { username: user.username },
+      process.env.JWT_SECRET_KEY || 'your-secret-key',
+      { expiresIn: '24h' }
+    );
+
+    // Don't send password in response
+    const userWithoutPassword = {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      token,
+    };
+
+    return res.status(201).json(userWithoutPassword);
+  } catch (err) {
+    return res.status(500).json({ message: 'Server error', error: err });
   }
 });
 
-// POST /users - Create a new user
-router.post('/', async (req: Request, res: Response) => {
-  const { username, email, password } = req.body;
+// POST /api/users/login - Login user
+router.post('/login', async (req: Request, res: Response) => {
   try {
-    const newUser = await User.create({ username, email, password });
-    res.status(201).json(newUser);
-  } catch (error: any) {
-    res.status(400).json({ message: error.message });
-  }
-});
+    const { username, password } = req.body;
 
-// PUT /users/:id - Update a user by id
-router.put('/:id', async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const { username, password } = req.body;
-  try {
-    const user = await User.findByPk(id);
-    if (user) {
-      user.username = username;
-      user.password = password;
-      await user.save();
-      res.json(user);
-    } else {
-      res.status(404).json({ message: 'User not found' });
+    // Find user
+    const user = await User.findOne({
+      where: {
+        username,
+      },
+    });
+
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid credentials' });
     }
-  } catch (error: any) {
-    res.status(400).json({ message: error.message });
-  }
-});
 
-// DELETE /users/:id - Delete a user by id
-router.delete('/:id', async (req: Request, res: Response) => {
-  const { id } = req.params;
-  try {
-    const user = await User.findByPk(id);
-    if (user) {
-      await user.destroy();
-      res.json({ message: 'User deleted' });
-    } else {
-      res.status(404).json({ message: 'User not found' });
+    // Check password
+    const validPassword = await user.checkPassword(password);
+    if (!validPassword) {
+      return res.status(401).json({ message: 'Invalid credentials' });
     }
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { username: user.username },
+      process.env.JWT_SECRET_KEY || 'your-secret-key',
+      { expiresIn: '24h' }
+    );
+
+    // Don't send password in response
+    const userWithoutPassword = {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      token,
+    };
+
+    return res.json(userWithoutPassword);
+  } catch (err) {
+    return res.status(500).json({ message: 'Server error', error: err });
   }
 });
 
-export { router as userRouter };
+// GET /api/users/me - Get current user's info
+router.get('/me', authenticateToken, async (req: Request, res: Response) => {
+  try {
+    const username = req.user?.username;
+    if (!username) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    const user = await User.findOne({
+      where: { username },
+      attributes: ['id', 'username', 'email'],
+      include: [{
+        model: Profile,
+        as: 'profile',
+      }]
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    return res.json(user);
+  } catch (err) {
+    return res.status(500).json({ message: 'Server error', error: err });
+  }
+});
+
+// PUT /api/users/me - Update current user's info
+router.put('/me', authenticateToken, async (req: Request, res: Response) => {
+  try {
+    const username = req.user?.username;
+    if (!username) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    const user = await User.findOne({ where: { username } });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const { email, password } = req.body;
+
+    if (email) {
+      // Check if new email already exists
+      const existingEmail = await User.findOne({ where: { email } });
+      if (existingEmail && existingEmail.id !== user.id) {
+        return res.status(400).json({ message: 'Email already exists' });
+      }
+      user.email = email;
+    }
+
+    if (password) {
+      await user.setPassword(password);
+    }
+
+    await user.save();
+
+    // Don't send password in response
+    const userWithoutPassword = {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+    };
+
+    return res.json(userWithoutPassword);
+  } catch (err) {
+    return res.status(500).json({ message: 'Server error', error: err });
+  }
+});
+
+// DELETE /api/users/me - Delete current user
+router.delete('/me', authenticateToken, async (req: Request, res: Response) => {
+  try {
+    const username = req.user?.username;
+    if (!username) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    const user = await User.findOne({ where: { username } });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    await user.destroy();
+    return res.json({ message: 'User deleted successfully' });
+  } catch (err) {
+    return res.status(500).json({ message: 'Server error', error: err });
+  }
+});
+
+export default router;
