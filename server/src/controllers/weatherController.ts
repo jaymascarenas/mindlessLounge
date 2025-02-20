@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import fetch from "node-fetch";
 
 const API_KEY = process.env.WEATHER_API_KEY;
 
