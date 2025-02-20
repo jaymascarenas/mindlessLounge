@@ -20,7 +20,11 @@ export const login = async (req: Request, res: Response) => {
 
   const secretKey = process.env.JWT_SECRET_KEY || "";
 
-  const token = jwt.sign({ username }, secretKey, { expiresIn: "1h" });
+  const token = jwt.sign(
+    { username: user.username, email: user.email, id: user.id },
+    secretKey,
+    { expiresIn: "12h" }
+  );
   return res.json({ token });
 };
 
@@ -37,11 +41,17 @@ export const signup = async (req: Request, res: Response) => {
         .json({ message: "User already exists, please login" });
     }
 
-    await User.create({ email, username, password });
+    const newUser = await User.create({ email, username, password });
 
     const secretKey = process.env.JWT_SECRET_KEY || "";
 
-    const token = jwt.sign({ username, email }, secretKey, { expiresIn: "1h" });
+    const token = jwt.sign(
+      { username: newUser.username, email: newUser.email, id: newUser.id },
+      secretKey,
+      {
+        expiresIn: "12h",
+      }
+    );
     return res.json({ token });
   } catch (error: any) {
     return res.status(400).json({ message: error.message });
