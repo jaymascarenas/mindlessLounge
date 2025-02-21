@@ -3,7 +3,7 @@ import { getTopBusinessHeadlines } from "./api/newsService.js";
 
 const router = express.Router();
 
-router.get("/news", async (_, res) => {
+router.get("/", async (_, res) => {
   try {
     const news = await getTopBusinessHeadlines();
     res.json(news);
