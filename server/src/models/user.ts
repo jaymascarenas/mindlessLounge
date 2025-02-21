@@ -6,6 +6,7 @@ interface UserAttributes {
   username: string;
   email: string;
   password: string;
+  profilePicture: string;
 }
 
 interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
@@ -18,6 +19,7 @@ export class User
   public username!: string;
   public email!: string;
   public password!: string;
+  public profilePicture!: string;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -53,6 +55,11 @@ export function UserFactory(sequelize: Sequelize): typeof User {
       password: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+      profilePicture: {                    
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'https://i.imgur.com/SI1jDAi.jpg'  // Default to Chill Mind
       },
     },
     {
