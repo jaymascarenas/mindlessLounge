@@ -41,7 +41,12 @@ export const signup = async (req: Request, res: Response) => {
         .json({ message: "User already exists, please login" });
     }
 
-    const newUser = await User.create({ email, username, password });
+    const newUser = await User.create({
+      email,
+      username,
+      password,
+      profilePicture: req.body.profilePicture || 'https://i.imgur.com/SI1jDAi.jpg' // Default profile picture
+    });
 
     const secretKey = process.env.JWT_SECRET_KEY || "";
 
