@@ -1,12 +1,15 @@
 const forceDatabaseRefresh = false;
 
 import express from "express";
-import sequelize from "./config/connection";
-import routes from "./routes/index";
-import weatherRoutes from "./routes/weatherRoutes";
-import newsRoutes from "./routes/newsRoutes";
+import sequelize from "./config/connection.js";  // Make sure this file exists in dist/config/
+import routes from "./routes/index.js";
+import weatherRoutes from "./routes/weatherRoutes.js";
+import newsRoutes from "./routes/newsRoutes.js";
 import path from "path";
+import { fileURLToPath } from 'url';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3001;
 
