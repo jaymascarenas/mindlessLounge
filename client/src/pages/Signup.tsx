@@ -9,6 +9,7 @@ const Signup = () => {
     username: "",
     email: "",
     password: "",
+    profilePicture: "",
   });
 
   const handleChange = (
@@ -67,7 +68,7 @@ const Signup = () => {
         </div>
         <div className="form-group">
           <button className="btn btn-primary" type="submit">
-            Login
+            Sign Up
           </button>
         </div>
       </form>
