@@ -2,13 +2,16 @@ import { Router, Request, Response } from 'express';
 import { User, Profile } from '../../models/index.js';
 import { authenticateToken } from '../../middleware/auth.js';
 import jwt from 'jsonwebtoken';
+import { getProfilePictures } from '../../controllers/profileController.js';
 
 const router = Router();
+
+router.get('/profile-pictures', getProfilePictures);
 
 // POST /api/users/register - Register a new user
 router.post('/register', async (req: Request, res: Response) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, profilePicture } = req.body;
 
     // Check if username or email already exists
     const existingUser = await User.findOne({
@@ -36,6 +39,7 @@ router.post('/register', async (req: Request, res: Response) => {
       username,
       email,
       password,
+      profilePicture: profilePicture || 'https://i.imgur.com/SI1jDAi.jpg', // Default to Chill Mind
     });
 
     // Create an empty profile for the user
@@ -56,6 +60,7 @@ router.post('/register', async (req: Request, res: Response) => {
       id: user.id,
       username: user.username,
       email: user.email,
+      profilePicture: user.profilePicture,
       token,
     };
 
@@ -89,7 +94,10 @@ router.post('/login', async (req: Request, res: Response) => {
 
     // Generate JWT token
     const token = jwt.sign(
-      { username: user.username },
+      { 
+        username: user.username,
+        profilePicture: user.profilePicture  // Add profile picture to token
+      },
       process.env.JWT_SECRET_KEY || 'your-secret-key',
       { expiresIn: '24h' }
     );
@@ -99,6 +107,7 @@ router.post('/login', async (req: Request, res: Response) => {
       id: user.id,
       username: user.username,
       email: user.email,
+      profilePicture: user.profilePicture,
       token,
     };
 
@@ -118,7 +127,7 @@ router.get('/me', authenticateToken, async (req: Request, res: Response) => {
 
     const user = await User.findOne({
       where: { username },
-      attributes: ['id', 'username', 'email'],
+      attributes: ['id', 'username', 'email', 'profilePicture'],
       include: [{
         model: Profile,
         as: 'profile',
