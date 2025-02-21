@@ -49,8 +49,8 @@ export const PROFILE_PICTURES = [
     }
 ];
 
-// Controller functions
-export const getProfilePictures = (req: Request, res: Response) => {
+// Export the controller function
+export const getProfilePictures = (_req: Request, res: Response) => {
     try {
         res.json({
             success: true,
@@ -64,6 +64,7 @@ export const getProfilePictures = (req: Request, res: Response) => {
     }
 };
 
+// Export the validation function
 export const validateProfilePicture = (url: string): boolean => {
     return PROFILE_PICTURES.some(pic => pic.url === url);
 };

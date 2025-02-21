@@ -21,6 +21,7 @@ export class User
   public password!: string;
   public profilePicture!: string;
 
+
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 

@@ -1,16 +1,20 @@
 const forceDatabaseRefresh = false;
 
 import express from "express";
-import sequelize from "./config/connection.js";
-import routes from "./routes/index.js";
-import weatherRoutes from "./routes/weatherRoutes.js";
-import newsRoutes from "./routes/newsRoutes.js";
+import sequelize from "./config/connection";
+import routes from "./routes/index";
+import weatherRoutes from "./routes/weatherRoutes";
+import newsRoutes from "./routes/newsRoutes";
+import path from "path";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Serves static files in the entire client's dist folder
 app.use(express.static("../client/dist"));
+
+// Serves the images
+app.use(`/images`, express.static(path.join(__dirname, "public/images")));
 
 app.use(express.json());
 app.use(routes);
