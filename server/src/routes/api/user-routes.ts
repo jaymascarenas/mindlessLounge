@@ -157,7 +157,7 @@ router.put('/me', authenticateToken, async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    const { email, password } = req.body;
+    const { email, password, profilePicture } = req.body;
 
     if (email) {
       // Check if new email already exists
@@ -172,6 +172,10 @@ router.put('/me', authenticateToken, async (req: Request, res: Response) => {
       await user.setPassword(password);
     }
 
+    if (profilePicture) {
+      user.profilePicture = profilePicture;
+    }
+
     await user.save();
 
     // Don't send password in response
@@ -179,6 +183,7 @@ router.put('/me', authenticateToken, async (req: Request, res: Response) => {
       id: user.id,
       username: user.username,
       email: user.email,
+      profilePicture: user.profilePicture,
     };
 
     return res.json(userWithoutPassword);
