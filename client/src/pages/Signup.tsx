@@ -3,12 +3,23 @@ import { useState, type FormEvent, type ChangeEvent } from "react";
 import Auth from "../utils/auth";
 import { signup } from "../api/authAPI";
 import type { UserSignup } from "../interfaces/UserSignup";
+import 
+import {
+  Container,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  Button,
+  Alert,
+} from "reactstrap";
 
 const Signup = () => {
   const [signupData, setSignupData] = useState<UserSignup>({
     username: "",
     email: "",
     password: "",
+    profilePicture: "",
   });
 
   const handleChange = (
@@ -34,7 +45,7 @@ const Signup = () => {
   return (
     <div className="form-container">
       <form className="form login-form" onSubmit={handleSubmit}>
-        <h1>Login</h1>
+        <h1>Sign Up Here!</h1>
         <div className="form-group">
           <label>Username</label>
           <input
@@ -67,7 +78,7 @@ const Signup = () => {
         </div>
         <div className="form-group">
           <button className="btn btn-primary" type="submit">
-            Login
+            Sign Up
           </button>
         </div>
       </form>
