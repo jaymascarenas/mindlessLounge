@@ -174,25 +174,51 @@ const Home = () => {
                 </FormGroup>
               </Form>
 
-              {/* Brain Icon */}
+              {/* Brain Icon as Button */}
               <div style={{
                 flex: 1,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                margin: '30px 0'
+                margin: '30px 0',
+                flexDirection: 'column',
+                gap: '20px'
               }}>
-                <img 
-                  src={brainIcon} 
-                  alt="Brain Icon" 
-                  style={{ 
-                    width: '100px',
-                    opacity: 0.9
+                <Link 
+                  to="/signup"
+                  style={{
+                    display: 'block',
+                    cursor: 'pointer',
+                    padding: '10px',
+                    borderRadius: '50%',
+                    transition: 'transform 0.3s ease'
                   }}
-                />
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.transform = 'scale(1.1)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                  }}
+                >
+                  <img 
+                    src={brainIcon} 
+                    alt="Sign Up" 
+                    style={{ 
+                      width: '100px',
+                      opacity: 0.9,
+                      transition: 'opacity 0.3s ease'
+                    }}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.opacity = '1';
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.opacity = '0.9';
+                    }}
+                  />
+                </Link>
               </div>
 
-              {/* Create New Profile Link */}
+              {/* Create New Profile Text */}
               <Link 
                 to="/signup" 
                 style={{
