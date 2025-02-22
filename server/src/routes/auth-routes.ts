@@ -2,6 +2,7 @@ import { Router, type Request, type Response } from "express";
 import { User } from "../models/user.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import { getProfilePictures } from "../controllers/profileController.js";
 
 export const login = async (req: Request, res: Response) => {
   const { username, password } = req.body;
@@ -45,7 +46,8 @@ export const signup = async (req: Request, res: Response) => {
       email,
       username,
       password,
-      profilePicture: req.body.profilePicture || 'https://i.imgur.com/SI1jDAi.jpg' // Default profile picture
+      profilePicture:
+        req.body.profilePicture || "https://i.imgur.com/SI1jDAi.jpg", // Default profile picture
     });
 
     const secretKey = process.env.JWT_SECRET_KEY || "";
@@ -66,6 +68,7 @@ export const signup = async (req: Request, res: Response) => {
 const router = Router();
 
 // POST /login - Login a user
+router.get("/profile-pictures", getProfilePictures);
 router.post("/login", login);
 router.post("/signup", signup);
 
