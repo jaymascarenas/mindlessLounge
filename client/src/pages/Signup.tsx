@@ -1,18 +1,10 @@
 import { useState, type FormEvent, type ChangeEvent } from "react";
+import { Container, Form, FormGroup, Label, Input, Button } from "reactstrap";
 
 import Auth from "../utils/auth";
 import { signup } from "../api/authAPI";
 import type { UserSignup } from "../interfaces/UserSignup";
-import 
-import {
-  Container,
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  Button,
-  Alert,
-} from "reactstrap";
+import "../assets/css/index.css";
 
 const Signup = () => {
   const [signupData, setSignupData] = useState<UserSignup>({
@@ -43,46 +35,52 @@ const Signup = () => {
   };
 
   return (
-    <div className="form-container">
-      <form className="form login-form" onSubmit={handleSubmit}>
-        <h1>Sign Up Here!</h1>
-        <div className="form-group">
-          <label>Username</label>
-          <input
-            className="form-input"
+    <Container className="mt-5">
+      <h2 className="text-center mb-4">
+        Sign Up to Begin Your Mindless Journey
+      </h2>
+      <Form onSubmit={handleSubmit}>
+        <FormGroup>
+          <Label for="username">Username</Label>
+          <Input
             type="text"
             name="username"
+            id="username"
+            placeholder="Enter your username"
             value={signupData.username || ""}
             onChange={handleChange}
+            required
           />
-        </div>
-        <div className="form-group">
-          <label>Email</label>
-          <input
-            className="form-input"
+        </FormGroup>
+        <FormGroup>
+          <Label for="email">Email</Label>
+          <Input
             type="email"
             name="email"
+            id="email"
+            placeholder="Enter your email"
             value={signupData.email || ""}
             onChange={handleChange}
+            required
           />
-        </div>
-        <div className="form-group">
-          <label>Password</label>
-          <input
-            className="form-input"
+        </FormGroup>
+        <FormGroup>
+          <Label for="password">Password</Label>
+          <Input
             type="password"
             name="password"
+            id="password"
+            placeholder="Enter your password"
             value={signupData.password || ""}
             onChange={handleChange}
+            required
           />
-        </div>
-        <div className="form-group">
-          <button className="btn btn-primary" type="submit">
-            Sign Up
-          </button>
-        </div>
-      </form>
-    </div>
+        </FormGroup>
+        <Button color="primary" block>
+          Sign Up
+        </Button>
+      </Form>
+    </Container>
   );
 };
 

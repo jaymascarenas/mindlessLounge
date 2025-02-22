@@ -1,3 +1,7 @@
 export default function Footer() {
-  return <div>Footer</div>;
+  return (
+    <footer className="footer">
+      <div className="footer-content">© Mindless Lounge </div>
+    </footer>
+  );
 }
