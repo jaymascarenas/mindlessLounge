@@ -1,4 +1,4 @@
-import { useState, type FormEvent, type ChangeEvent } from "react";
+import { useState, useEffect, type FormEvent, type ChangeEvent } from "react";
 import { Container, Form, FormGroup, Label, Input, Button } from "reactstrap";
 
 import Auth from "../utils/auth";
@@ -34,15 +34,27 @@ const Signup = () => {
     }
   };
 
+  useEffect(() => {
+    // Set the background color when the component mounts
+    document.body.style.backgroundColor = "#DCB7EA";
+
+    // Reset the background color when the component unmounts
+    return () => {
+      document.body.style.backgroundColor = "";
+    };
+  }, []);
+
   return (
     <div
       style={{
-        backgroundColor: "#993399", // Replace with your desired color
-        minHeight: "100vh", // This ensures the color covers the full viewport height
+        backgroundColor: "#AE55B4",
+        minHeight: "100%",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
+        borderRadius: "10px",
+        boxShadow: "4px 6px 8px rgba(0, 0, 0, 0.3)",
       }}
     >
       <Container className="mt-5">

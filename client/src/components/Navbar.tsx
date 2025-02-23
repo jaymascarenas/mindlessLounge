@@ -1,48 +1,45 @@
-import { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { Navbar, Nav, NavItem, Button } from "reactstrap";
 import { Link } from "react-router-dom";
 import auth from "../utils/auth";
 
-const Navbar = () => {
-  const [loginCheck, setLoginCheck] = useState(false);
-
-  const checkLogin = () => {
-    if (auth.loggedIn()) {
-      setLoginCheck(true);
-    }
-  };
-
-  useEffect(() => {
-    console.log(loginCheck);
-    checkLogin();
-  }, [loginCheck]);
+const NavbarComponent = () => {
+  const [loginCheck, setLoginCheck] = useState(auth.loggedIn());
 
   return (
-    <div className="display-flex justify-space-between align-center py-2 px-5 mint-green">
-      <h1>Authentication Review</h1>
-      <div>
+    <Navbar color="light" light className="flex-column vh-100 p-3">
+      <h1 className="mb-4">Authentication Review</h1>
+      <Nav vertical className="w-100">
         {!loginCheck ? (
           <>
-            <button className="btn" type="button" style={{marginRight: '10px'}}>
-              <Link to="/signup">Signup</Link>
-            </button>
-            <button className="btn" type="button">
-              <Link to="/login">Login</Link>
-            </button>
+            <NavItem className="mb-2">
+              <Button color="primary" tag={Link} to="/signup" block>
+                Signup
+              </Button>
+            </NavItem>
+            <NavItem>
+              <Button color="primary" tag={Link} to="/login" block>
+                Login
+              </Button>
+            </NavItem>
           </>
         ) : (
-          <button
-            className="btn"
-            type="button"
-            onClick={() => {
-              auth.logout();
-            }}
-          >
-            Logout
-          </button>
+          <NavItem>
+            <Button
+              color="primary"
+              onClick={() => {
+                auth.logout();
+                setLoginCheck(false);
+              }}
+              block
+            >
+              Logout
+            </Button>
+          </NavItem>
         )}
-      </div>
-    </div>
+      </Nav>
+    </Navbar>
   );
 };
 
-export default Navbar;
+export default NavbarComponent;
