@@ -1,4 +1,4 @@
-import { useState, useEffect, useLayoutEffect } from "react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { Link } from 'react-router-dom';
 import { retrieveUsers } from "../api/userAPI";
 import type { UserData } from "../interfaces/UserData";
@@ -13,18 +13,118 @@ import mindlessLogo from '../assets/images/mindless-logo.png';
 import mindlessLogoFull from '../assets/images/mindless-logo-full.png';
 import brainIcon from '../assets/images/brain-icon.png';
 
+// NeonTrail class
+class NeonTrail {
+  x: number;
+  y: number;
+  radius: number;
+  color: string;
+  opacity: number;
+  hue: number;
+
+  constructor(x: number, y: number, hue: number) {
+    this.x = x;
+    this.y = y;
+    this.radius = 4;
+    this.hue = hue;
+    this.color = `hsl(${hue}, 100%, 50%)`;
+    this.opacity = 1;
+  }
+
+  update() {
+    this.opacity -= 0.015;
+  }
+
+  draw(ctx: CanvasRenderingContext2D) {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    ctx.fillStyle = `hsla(${this.hue}, 100%, 50%, ${this.opacity})`;
+    ctx.shadowBlur = 15;
+    ctx.shadowColor = this.color;
+    ctx.fill();
+    ctx.closePath();
+    ctx.shadowBlur = 0;
+  }
+}
+
 const Home = () => {
   const [users, setUsers] = useState<UserData[]>([]);
   const [error, setError] = useState(false);
   const [loginCheck, setLoginCheck] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const trailsRef = useRef<NeonTrail[]>([]);
+  const mouseRef = useRef({ x: 0, y: 0 });
+  const hueRef = useRef(0);
+  const animationFrameRef = useRef<number>();
 
   useEffect(() => {
     if (loginCheck) {
       fetchUsers();
     }
   }, [loginCheck]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+
+    const createTrail = (x: number, y: number) => {
+      hueRef.current = (hueRef.current + 1) % 360;
+      const trail = new NeonTrail(x, y, hueRef.current);
+      trailsRef.current.push(trail);
+    };
+
+    const animate = () => {
+      if (!ctx) return;
+      
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      for (let i = trailsRef.current.length - 1; i >= 0; i--) {
+        const trail = trailsRef.current[i];
+        trail.update();
+
+        if (trail.opacity <= 0) {
+          trailsRef.current.splice(i, 1);
+          continue;
+        }
+
+        trail.draw(ctx);
+      }
+
+      createTrail(mouseRef.current.x, mouseRef.current.y);
+      animationFrameRef.current = requestAnimationFrame(animate);
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseRef.current = {
+        x: e.clientX,
+        y: e.clientY
+      };
+    };
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('mousemove', handleMouseMove);
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, []);
 
   useLayoutEffect(() => {
     checkLogin();
@@ -57,29 +157,45 @@ const Home = () => {
 
   return (
     <>
+      <canvas
+        ref={canvasRef}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          pointerEvents: 'none',
+          zIndex: 9999
+        }}
+      />
       {!loginCheck ? (
         <div style={{ 
-          minHeight: '100vh', 
-          backgroundColor: '#86A7E8',
+          minHeight: '100vh',
+          minWidth: '100vw',
+          backgroundColor: '#87CEEB',
           display: 'flex',
-          flexDirection: 'column'
+          flexDirection: 'column',
+          margin: 0,
+          padding: 0,
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0
         }}>
           <div style={{
             flex: 1,
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            gap: '80px',
-            padding: '0 40px'
+            gap: '96px',
+            padding: '64px 0'
           }}>
             {/* Left Side - Brain Meeting Image */}
             <div style={{
-              width: '500px',
-              height: '500px',
-              border: '2px solid rgba(0, 0, 0, 0.2)',
-              borderRadius: '4px',
-              overflow: 'hidden',
-              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+              width: '600px',
+              height: '450px',
+              borderRadius: '6px',
+              overflow: 'hidden'
             }}>
               <img 
                 src={brainMeeting} 
@@ -95,34 +211,32 @@ const Home = () => {
             {/* Right Side - Login Form */}
             <div style={{
               width: '400px',
-              height: '500px',
-              border: '1px solid rgba(0, 0, 0, 0.2)',
-              borderRadius: '4px',
-              backgroundColor: '#ABC7FF',
+              backgroundColor: 'rgba(171, 199, 255, 0.4)',
+              backdropFilter: 'blur(8px)',
+              borderRadius: '8px',
+              padding: '32px',
               display: 'flex',
               flexDirection: 'column',
-              alignItems: 'center',
-              padding: '32px'
+              alignItems: 'center'
             }}>
-              {/* Top Logo */}
               <img 
                 src={mindlessLogoFull} 
                 alt="Mindless Lounge Logo" 
                 style={{
-                  width: '100px',
-                  marginBottom: '40px'
+                  width: '80px',
+                  marginBottom: '32px'
                 }}
               />
 
-              {/* Login Form */}
               <Form onSubmit={handleSubmit} style={{ width: '100%' }}>
-                <FormGroup>
+                <FormGroup style={{ marginBottom: '24px' }}>
                   <Label 
                     for="username" 
                     style={{ 
-                      fontSize: '1.25rem', 
+                      fontSize: '1.125rem', 
                       color: '#2A4374',
-                      marginBottom: '15px'
+                      marginBottom: '8px',
+                      display: 'block'
                     }}
                   >
                     Email/Username:
@@ -139,19 +253,20 @@ const Home = () => {
                       borderRadius: '0',
                       padding: '8px 0',
                       color: '#2A4374',
-                      marginBottom: '25px',
-                      fontSize: '1.1rem'
+                      fontSize: '1rem',
+                      width: '100%'
                     }}
                   />
                 </FormGroup>
 
-                <FormGroup>
+                <FormGroup style={{ marginBottom: '32px' }}>
                   <Label 
                     for="password" 
                     style={{ 
-                      fontSize: '1.25rem', 
+                      fontSize: '1.125rem', 
                       color: '#2A4374',
-                      marginBottom: '15px'
+                      marginBottom: '8px',
+                      display: 'block'
                     }}
                   >
                     Password:
@@ -168,86 +283,73 @@ const Home = () => {
                       borderRadius: '0',
                       padding: '8px 0',
                       color: '#2A4374',
-                      fontSize: '1.1rem'
+                      fontSize: '1rem',
+                      width: '100%'
                     }}
                   />
                 </FormGroup>
-              </Form>
 
-              {/* Brain Icon as Button */}
-              <div style={{
-                flex: 1,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: '30px 0',
-                flexDirection: 'column',
-                gap: '20px'
-              }}>
-                <Link 
-                  to="/signup"
-                  style={{
-                    display: 'block',
-                    cursor: 'pointer',
-                    padding: '10px',
-                    borderRadius: '50%',
-                    transition: 'transform 0.3s ease'
-                  }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.1)';
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)';
-                  }}
-                >
-                  <img 
-                    src={brainIcon} 
-                    alt="Sign Up" 
-                    style={{ 
-                      width: '100px',
-                      opacity: 0.9,
-                      transition: 'opacity 0.3s ease'
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  marginTop: '16px'
+                }}>
+                  <button 
+                    type="submit"
+                    onClick={handleSubmit}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      padding: 0,
+                      transition: 'transform 0.2s ease'
                     }}
                     onMouseOver={(e) => {
-                      e.currentTarget.style.opacity = '1';
+                      e.currentTarget.style.transform = 'scale(1.05)';
                     }}
                     onMouseOut={(e) => {
-                      e.currentTarget.style.opacity = '0.9';
+                      e.currentTarget.style.transform = 'scale(1)';
                     }}
-                  />
-                </Link>
-              </div>
-
-              {/* Create New Profile Text */}
-              <Link 
-                to="/signup" 
-                style={{
-                  fontSize: '1.25rem',
-                  color: '#2A4374',
-                  textDecoration: 'none',
-                  marginTop: '20px'
-                }}
-              >
-                Create New Profile
-              </Link>
+                  >
+                    <img 
+                      src={brainIcon} 
+                      alt="Login" 
+                      style={{ 
+                        width: '80px',
+                        height: '80px'
+                      }}
+                    />
+                  </button>
+                </div>
+              </Form>
             </div>
           </div>
 
-          {/* Bottom Logo */}
+          {/* Bottom Section */}
           <div style={{
             display: 'flex',
             justifyContent: 'center',
-            marginBottom: '40px',
-            marginTop: '20px'
+            alignItems: 'center',
+            gap: '16px',
+            marginBottom: '32px'
           }}>
             <img 
               src={mindlessLogo} 
               alt="Mindless Lounge" 
               style={{ 
-                width: '300px',
-                filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))'
+                width: '300px'
               }}
             />
+            <Link 
+              to="/signup" 
+              style={{
+                fontSize: '1.125rem',
+                color: '#2A4374',
+                textDecoration: 'none',
+                marginLeft: '16px'
+              }}
+            >
+              Create New Profile
+            </Link>
           </div>
         </div>
       ) : (
