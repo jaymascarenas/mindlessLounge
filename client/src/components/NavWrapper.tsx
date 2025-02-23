@@ -6,9 +6,9 @@ export default function NavWrapper({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <div className="d-flex">
+      <main className="flex-grow-1">{children}</main>
       <Navbar />
-      {children}
-    </>
+    </div>
   );
 }
