@@ -13,10 +13,11 @@ const NavbarComponent = () => {
         backgroundColor: "#DCB7EA",
         display: "flex",
         flexDirection: "column",
-        height: "90vh",
+        height: "100vh",
         position: "sticky",
         top: 0,
         borderRadius: "10px",
+        boxShadow: "4px 6px 8px rgba(0, 0, 0, 0.3)",
       }}
       light
       className="p-3"
