@@ -25,14 +25,14 @@ class NeonTrail {
   constructor(x: number, y: number, hue: number) {
     this.x = x;
     this.y = y;
-    this.radius = 4;
+    this.radius = 7;
     this.hue = hue;
-    this.color = `hsl(${hue}, 100%, 50%)`;
+    this.color = `hsl(${hue}, 150%, 50%)`;
     this.opacity = 1;
   }
 
   update() {
-    this.opacity -= 0.015;
+    this.opacity -= 0.025;
   }
 
   draw(ctx: CanvasRenderingContext2D) {
@@ -211,7 +211,7 @@ const Home = () => {
             {/* Right Side - Login Form */}
             <div style={{
               width: '400px',
-              backgroundColor: 'rgba(171, 199, 255, 0.4)',
+              backgroundColor: 'rgba(27, 71, 161, 0.4)',
               backdropFilter: 'blur(8px)',
               borderRadius: '8px',
               padding: '32px',
