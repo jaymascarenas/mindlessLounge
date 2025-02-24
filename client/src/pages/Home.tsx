@@ -1,5 +1,5 @@
 import { useState, useEffect, useLayoutEffect, useRef } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { retrieveUsers } from "../api/userAPI";
 import type { UserData } from "../interfaces/UserData";
 import ErrorPage from "./ErrorPage";
@@ -48,6 +48,7 @@ class NeonTrail {
 }
 
 const Home = () => {
+  const navigate = useNavigate();
   const [users, setUsers] = useState<UserData[]>([]);
   const [error, setError] = useState(false);
   const [loginCheck, setLoginCheck] = useState(false);
@@ -317,6 +318,7 @@ const Home = () => {
                         width: '80px',
                         height: '80px'
                       }}
+                      onClick={() => navigate('/feed')}  // Add onClick handler
                     />
                   </button>
                 </div>
