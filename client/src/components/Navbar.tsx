@@ -1,17 +1,19 @@
-import React from "react";
 import { Navbar, Nav, NavItem, Button } from "reactstrap";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import auth from "../utils/auth";
 import logo from "../assets/images/mindless-logo-full.png";
 
 const NavbarComponent = () => {
+  const location = useLocation();
+  const isOnFeed = location.pathname === "/feed";
+
   return (
     <Navbar
       style={{
         backgroundColor: "#DCB7EA",
         display: "flex",
         flexDirection: "column",
-        height: "80vh",
+        height: "90vh",
         position: "sticky",
         top: 0,
         borderRadius: "10px",
@@ -26,7 +28,8 @@ const NavbarComponent = () => {
           style={{
             maxWidth: "100%",
             height: "auto",
-            maxHeight: "100px",
+            maxHeight: "150px",
+            borderRadius: "10px",
           }}
         />
       </div>
@@ -35,20 +38,20 @@ const NavbarComponent = () => {
         className="w-100 flex-grow-1 d-flex flex-column justify-content-between"
       >
         <div>
-          <NavItem className="mb-2">
+          <NavItem className="mb-3">
             <Button
               style={{
                 backgroundColor: "#AE55B4",
                 boxShadow: "4px 6px 8px rgba(0, 0, 0, 0.3)",
               }}
               tag={Link}
-              to="/feed"
+              to={isOnFeed ? "/profile" : "/feed"}
               block
             >
-              Feed
+              {isOnFeed ? "Profile" : "Feed"}
             </Button>
           </NavItem>
-          <NavItem className="mb-2">
+          <NavItem className="mb-3">
             <Button
               style={{
                 backgroundColor: "#AE55B4",
