@@ -1,5 +1,5 @@
 import express from "express";
-import { getTopBusinessHeadlines } from "./api/newsService.js";
+import { getTopBusinessHeadlines } from "./newsService.js";
 
 const router = express.Router();
 
