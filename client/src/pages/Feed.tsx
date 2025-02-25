@@ -1,15 +1,19 @@
-import React from 'react';
-import { Container, Row, Col, Card, CardBody, Button } from 'reactstrap';
-import brainIcon from '../assets/images/brain-icon.png';
-import mindlessLogo from '../assets/images/mindless-logo-full.png';
+import { Container, Row, Col, Card, CardBody, Button } from "reactstrap";
+import brainIcon from "../assets/images/brain-icon.png";
+import mindlessLogo from "../assets/images/mindless-logo-full.png";
 
 export default function Feed() {
   return (
-    <div className="min-vh-100 d-flex flex-column bg-primary" style={{ backgroundColor: '#6C88D8' }}>
+    <div
+      className="min-vh-100 d-flex flex-column bg-primary"
+      style={{ backgroundColor: "#6C88D8", borderRadius: "10px" }}
+    >
       <Container className="py-4">
-        
         {/* Header */}
-        <h1 className="text-purple text-decoration-underline fw-normal" style={{ fontSize: '4rem', color: '#FFFFFF' }}>
+        <h1
+          className="text-purple text-decoration-underline fw-normal"
+          style={{ fontSize: "4rem", color: "#FFFFFF" }}
+        >
           Welcome to the Mindless Lounge
         </h1>
 
@@ -39,19 +43,25 @@ export default function Feed() {
 
             {/* Post Button & Brain Icon */}
             <div className="d-flex align-items-center justify-content-center">
-              <Button color="light" outline className="border border-danger px-4 me-2">
+              <Button
+                color="light"
+                outline
+                className="border border-danger px-4 me-2"
+              >
                 POST
               </Button>
-              <img src={brainIcon} alt="Brain Icon" style={{ width: '50px', height: '50px' }} />
+              <img
+                src={brainIcon}
+                alt="Brain Icon"
+                style={{ width: "50px", height: "50px" }}
+              />
             </div>
           </Col>
 
           {/* Right Sidebar */}
           <Col md={3} className="text-center">
             {/* Logo */}
-            <div className="mb-4">
-              
-            </div>
+            <div className="mb-4"></div>
 
             {/* Sidebar Links */}
             <div className="d-flex flex-column align-items-center text-dark">

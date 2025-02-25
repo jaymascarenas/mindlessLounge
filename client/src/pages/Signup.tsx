@@ -5,6 +5,7 @@ import Auth from "../utils/auth";
 import { signup } from "../api/authAPI";
 import type { UserSignup } from "../interfaces/UserSignup";
 import brainIcon from "../assets/images/brain-icon.png";
+import logo from "../assets/images/mindless-logo-full.png";
 
 const Signup = () => {
   const [signupData, setSignupData] = useState<UserSignup>({
@@ -55,9 +56,23 @@ const Signup = () => {
         justifyContent: "center",
         borderRadius: "10px",
         boxShadow: "4px 6px 8px rgba(0, 0, 0, 0.3)",
+        padding: "20px",
+        color: "white",
       }}
     >
-      <Container className="mt-5">
+      <div className="mb-4 d-flex justify-content-center w-100">
+        <img
+          src={logo}
+          alt="Mindless Logo"
+          style={{
+            maxWidth: "100%",
+            height: "auto",
+            maxHeight: "200px",
+            borderRadius: "10px",
+          }}
+        />
+      </div>
+      <Container className="mt-3">
         <h2 className="text-center mb-4">
           Sign Up to Begin Your Mindless Journey
         </h2>

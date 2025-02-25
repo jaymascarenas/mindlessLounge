@@ -1,5 +1,5 @@
 import { useState, useEffect, useLayoutEffect, useRef } from "react";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
 import { retrieveUsers } from "../api/userAPI";
 import type { UserData } from "../interfaces/UserData";
 import ErrorPage from "./ErrorPage";
@@ -8,10 +8,10 @@ import auth from "../utils/auth";
 import { Button, Form, FormGroup, Label, Input } from "reactstrap";
 
 // Import your images
-import brainMeeting from '../assets/images/brain-meeting.png';
-import mindlessLogo from '../assets/images/mindless-logo.png';
-import mindlessLogoFull from '../assets/images/mindless-logo-full.png';
-import brainIcon from '../assets/images/brain-icon.png';
+import brainMeeting from "../assets/images/brain-meeting.png";
+import mindlessLogo from "../assets/images/mindless-logo.png";
+import mindlessLogoFull from "../assets/images/mindless-logo-full.png";
+import brainIcon from "../assets/images/brain-icon.png";
 
 // NeonTrail class
 class NeonTrail {
@@ -52,9 +52,9 @@ const Home = () => {
   const [users, setUsers] = useState<UserData[]>([]);
   const [error, setError] = useState(false);
   const [loginCheck, setLoginCheck] = useState(false);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const trailsRef = useRef<NeonTrail[]>([]);
   const mouseRef = useRef({ x: 0, y: 0 });
@@ -71,7 +71,7 @@ const Home = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     const resizeCanvas = () => {
@@ -87,9 +87,9 @@ const Home = () => {
 
     const animate = () => {
       if (!ctx) return;
-      
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
+
       for (let i = trailsRef.current.length - 1; i >= 0; i--) {
         const trail = trailsRef.current[i];
         trail.update();
@@ -109,18 +109,18 @@ const Home = () => {
     const handleMouseMove = (e: MouseEvent) => {
       mouseRef.current = {
         x: e.clientX,
-        y: e.clientY
+        y: e.clientY,
       };
     };
 
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener("resize", resizeCanvas);
+    window.addEventListener("mousemove", handleMouseMove);
     animate();
 
     return () => {
-      window.removeEventListener('resize', resizeCanvas);
-      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener("resize", resizeCanvas);
+      window.removeEventListener("mousemove", handleMouseMove);
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
@@ -161,83 +161,94 @@ const Home = () => {
       <canvas
         ref={canvasRef}
         style={{
-          position: 'fixed',
+          position: "fixed",
           top: 0,
           left: 0,
-          pointerEvents: 'none',
-          zIndex: 9999
+          pointerEvents: "none",
+          zIndex: 9999,
         }}
       />
       {!loginCheck ? (
-        <div style={{ 
-          minHeight: '100vh',
-          minWidth: '100vw',
-          backgroundColor: '#87CEEB',
-          display: 'flex',
-          flexDirection: 'column',
-          margin: 0,
-          padding: 0,
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0
-        }}>
-          <div style={{
-            flex: 1,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: '96px',
-            padding: '64px 0'
-          }}>
+        <div
+          style={{
+            minHeight: "100vh",
+            minWidth: "100vw",
+            backgroundColor: "#87CEEB",
+            display: "flex",
+            flexDirection: "column",
+            margin: 0,
+            padding: 0,
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+          }}
+        >
+          <div
+            style={{
+              flex: 1,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "96px",
+              padding: "64px 0",
+            }}
+          >
             {/* Left Side - Brain Meeting Image */}
-            <div style={{
-              width: '600px',
-              height: '450px',
-              borderRadius: '6px',
-              overflow: 'hidden'
-            }}>
-              <img 
-                src={brainMeeting} 
-                alt="Brain Meeting Illustration" 
+            <div
+              style={{
+                width: "600px",
+                height: "450px",
+                borderRadius: "6px",
+                overflow: "hidden",
+                boxShadow: "4px 6px 8px rgba(0, 0, 0, 0.3)",
+              }}
+            >
+              <img
+                src={brainMeeting}
+                alt="Brain Meeting Illustration"
                 style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover'
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
                 }}
               />
             </div>
 
             {/* Right Side - Login Form */}
-            <div style={{
-              width: '400px',
-              backgroundColor: 'rgba(27, 71, 161, 0.4)',
-              backdropFilter: 'blur(8px)',
-              borderRadius: '8px',
-              padding: '32px',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center'
-            }}>
-              <img 
-                src={mindlessLogoFull} 
-                alt="Mindless Lounge Logo" 
+            <div
+              style={{
+                width: "400px",
+                backgroundColor: "rgba(27, 71, 161, 0.4)",
+                backdropFilter: "blur(8px)",
+                borderRadius: "8px",
+                padding: "32px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                boxShadow: "4px 6px 8px rgba(0, 0, 0, 0.3)",
+              }}
+            >
+              <img
+                src={mindlessLogoFull}
+                alt="Mindless Lounge Logo"
                 style={{
-                  width: '80px',
-                  marginBottom: '32px'
+                  width: "80px",
+                  marginBottom: "32px",
+                  borderRadius: "8px",
                 }}
               />
 
-              <Form onSubmit={handleSubmit} style={{ width: '100%' }}>
-                <FormGroup style={{ marginBottom: '24px' }}>
-                  <Label 
-                    for="username" 
-                    style={{ 
-                      fontSize: '1.125rem', 
-                      color: '#2A4374',
-                      marginBottom: '8px',
-                      display: 'block'
+              <Form onSubmit={handleSubmit} style={{ width: "100%" }}>
+                <FormGroup style={{ marginBottom: "24px" }}>
+                  <Label
+                    for="username"
+                    style={{
+                      fontSize: "1.125rem",
+                      color: "#2A4374",
+                      marginBottom: "8px",
+                      display: "block",
                     }}
                   >
                     Email/Username:
@@ -248,26 +259,26 @@ const Home = () => {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     style={{
-                      backgroundColor: 'transparent',
-                      border: 'none',
-                      borderBottom: '1px solid #2A4374',
-                      borderRadius: '0',
-                      padding: '8px 0',
-                      color: '#2A4374',
-                      fontSize: '1rem',
-                      width: '100%'
+                      backgroundColor: "transparent",
+                      border: "none",
+                      borderBottom: "1px solid #2A4374",
+                      borderRadius: "0",
+                      padding: "8px 0",
+                      color: "#2A4374",
+                      fontSize: "1rem",
+                      width: "100%",
                     }}
                   />
                 </FormGroup>
 
-                <FormGroup style={{ marginBottom: '32px' }}>
-                  <Label 
-                    for="password" 
-                    style={{ 
-                      fontSize: '1.125rem', 
-                      color: '#2A4374',
-                      marginBottom: '8px',
-                      display: 'block'
+                <FormGroup style={{ marginBottom: "32px" }}>
+                  <Label
+                    for="password"
+                    style={{
+                      fontSize: "1.125rem",
+                      color: "#2A4374",
+                      marginBottom: "8px",
+                      display: "block",
                     }}
                   >
                     Password:
@@ -278,47 +289,49 @@ const Home = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     style={{
-                      backgroundColor: 'transparent',
-                      border: 'none',
-                      borderBottom: '1px solid #2A4374',
-                      borderRadius: '0',
-                      padding: '8px 0',
-                      color: '#2A4374',
-                      fontSize: '1rem',
-                      width: '100%'
+                      backgroundColor: "transparent",
+                      border: "none",
+                      borderBottom: "1px solid #2A4374",
+                      borderRadius: "0",
+                      padding: "8px 0",
+                      color: "#2A4374",
+                      fontSize: "1rem",
+                      width: "100%",
                     }}
                   />
                 </FormGroup>
 
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  marginTop: '16px'
-                }}>
-                  <button 
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginTop: "16px",
+                  }}
+                >
+                  <button
                     type="submit"
                     onClick={handleSubmit}
                     style={{
-                      background: 'none',
-                      border: 'none',
+                      background: "none",
+                      border: "none",
                       padding: 0,
-                      transition: 'transform 0.2s ease'
+                      transition: "transform 0.2s ease",
                     }}
                     onMouseOver={(e) => {
-                      e.currentTarget.style.transform = 'scale(1.05)';
+                      e.currentTarget.style.transform = "scale(1.05)";
                     }}
                     onMouseOut={(e) => {
-                      e.currentTarget.style.transform = 'scale(1)';
+                      e.currentTarget.style.transform = "scale(1)";
                     }}
                   >
-                    <img 
-                      src={brainIcon} 
-                      alt="Login" 
-                      style={{ 
-                        width: '80px',
-                        height: '80px'
+                    <img
+                      src={brainIcon}
+                      alt="Login"
+                      style={{
+                        width: "80px",
+                        height: "80px",
                       }}
-                      onClick={() => navigate('/feed')}  // Add onClick handler
+                      onClick={() => navigate("/feed")} // Add onClick handler
                     />
                   </button>
                 </div>
@@ -327,27 +340,30 @@ const Home = () => {
           </div>
 
           {/* Bottom Section */}
-          <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: '16px',
-            marginBottom: '32px'
-          }}>
-            <img 
-              src={mindlessLogo} 
-              alt="Mindless Lounge" 
-              style={{ 
-                width: '300px'
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "16px",
+              marginBottom: "32px",
+            }}
+          >
+            <img
+              src={mindlessLogo}
+              alt="Mindless Lounge"
+              style={{
+                width: "300px",
+                borderRadius: "8px",
               }}
             />
-            <Link 
-              to="/signup" 
+            <Link
+              to="/signup"
               style={{
-                fontSize: '1.125rem',
-                color: '#2A4374',
-                textDecoration: 'none',
-                marginLeft: '16px'
+                fontSize: "1.125rem",
+                color: "#2A4374",
+                textDecoration: "none",
+                marginLeft: "16px",
               }}
             >
               Create New Profile
