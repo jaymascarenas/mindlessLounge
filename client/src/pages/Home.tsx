@@ -13,7 +13,7 @@ import mindlessLogo from "../assets/images/mindless-logo.png";
 import mindlessLogoFull from "../assets/images/mindless-logo-full.png";
 import brainIcon from "../assets/images/brain-icon.png";
 
-// NeonTrail class
+// NeonTrail class super cool cursor because I just had too
 class NeonTrail {
   x: number;
   y: number;
@@ -25,9 +25,9 @@ class NeonTrail {
   constructor(x: number, y: number, hue: number) {
     this.x = x;
     this.y = y;
-    this.radius = 7;
+    this.radius = 9;
     this.hue = hue;
-    this.color = `hsl(${hue}, 150%, 50%)`;
+    this.color = `hsl(${hue}, 180%, 50%)`;
     this.opacity = 1;
   }
 
