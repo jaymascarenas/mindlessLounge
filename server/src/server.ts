@@ -3,8 +3,8 @@ const forceDatabaseRefresh = false;
 import express from "express";
 import sequelize from "./config/connection.js"; // Make sure this file exists in dist/config/
 import routes from "./routes/index.js";
-import weatherRoutes from "./routes/weatherRoutes.js";
-import newsRoutes from "./routes/newsRoutes.js";
+import weatherRoutes from "./routes/api/weatherRoutes.js";
+import newsRoutes from "./routes/api/newsRoutes.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth-routes.js";
