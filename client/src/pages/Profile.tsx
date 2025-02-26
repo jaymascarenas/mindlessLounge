@@ -42,8 +42,12 @@ export default function Profile() {
             />
           </Col>
           <Col>
-            <h2 className="mb-3">Username</h2>
-            <p className="text">user@email.com</p>
+            <h2 className="mb-3">Madame Bouvier</h2>
+            <p className="text">marge@simpsons.com</p>
+            <p className="text">Springfield, USA</p>
+            <p className="text">Homer's my main squeeze</p>
+            <h3>Interests</h3>
+            <p>Cooking, Painting, Pearls</p>
           </Col>
         </Row>
         <Row className="mt-5">
@@ -51,7 +55,10 @@ export default function Profile() {
             <h3>Posts</h3>
             <Card className="mb-3">
               <CardBody>
-                <p>Example post content</p>
+                <p>
+                  Lisa and Bart are fighting again, we really should have gotten
+                  a lock for her saxophone case
+                </p>
                 <small className="text-muted">
                   Posted on: {new Date().toLocaleString()}
                 </small>
@@ -59,7 +66,10 @@ export default function Profile() {
             </Card>
             <Card className="mb-3">
               <CardBody>
-                <p>Example post content</p>
+                <p>
+                  I'll be a nuclear technician at the Power Plant today, I can't
+                  wait to give Mr. Burns a piece of my mind
+                </p>
                 <small className="text-muted">
                   Posted on: {new Date().toLocaleString()}
                 </small>
@@ -67,7 +77,10 @@ export default function Profile() {
             </Card>
             <Card className="mb-3">
               <CardBody>
-                <p>Example post content</p>
+                <p>
+                  I haven't seen Chief Wiggum in a while, I hope no one poisoned
+                  his donuts
+                </p>
                 <small className="text-muted">
                   Posted on: {new Date().toLocaleString()}
                 </small>
@@ -75,7 +88,10 @@ export default function Profile() {
             </Card>
             <Card className="mb-3">
               <CardBody>
-                <p>Example post content</p>
+                <p>
+                  Maggie found some dog food under the couch, at least it was
+                  organic!
+                </p>
                 <small className="text-muted">
                   Posted on: {new Date().toLocaleString()}
                 </small>

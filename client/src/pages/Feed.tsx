@@ -48,21 +48,36 @@ export default function Feed() {
             {/* First Post Box */}
             <Card className="border border-dark mb-4">
               <CardBody>
-                <div className="fw-bold">User ID</div>
-                <div className="mt-2">Post</div>
+                <div className="fw-bold">Madame Bouvier</div>
+                <div className="mt-2">
+                  {" "}
+                  Lisa and Bart are fighting again, we really should have gotten
+                  a lock for her saxophone case
+                </div>
               </CardBody>
             </Card>
 
             {/* News/Weather Section */}
             <Card className="border border-dark mb-4">
-              <CardBody className="text-center fw-bold">News/ Weather</CardBody>
+              <CardBody className="text-center fw-bold">
+                Top Business Headlines from NewsApi.org
+              </CardBody>
+            </Card>
+            <Card className="border border-dark mb-4">
+              <CardBody className="text-center fw-bold">
+                Current Weather Data fro OpenWeatherMap.org
+              </CardBody>
             </Card>
 
             {/* Second Post Box */}
             <Card className="border border-dark mb-4">
               <CardBody>
-                <div className="fw-bold">User ID</div>
-                <div className="mt-2">Post</div>
+                <div className="fw-bold">Madame Bouvier</div>
+                <div className="mt-2">
+                  {" "}
+                  I'll be a nuclear technician at the Power Plant today, I can't
+                  wait to give Mr. Burns a piece of my mind
+                </div>
               </CardBody>
             </Card>
 
