@@ -7,8 +7,7 @@ import {
 } from "react";
 import {
   Link,
-  useNavigate,
-  BrowserRouter,
+
   Route,
   Routes,
 } from "react-router-dom";
@@ -17,8 +16,7 @@ import type { UserData } from "../interfaces/UserData";
 import ErrorPage from "./ErrorPage";
 import auth from "../utils/auth";
 import { login } from "../api/authAPI";
-import { Button, Form, FormGroup, Label, Input } from "reactstrap";
-
+import { Form, FormGroup, Label, Input } from "reactstrap";
 // Import your images
 import brainMeeting from "../assets/images/brain-meeting.png";
 import mindlessLogo from "../assets/images/mindless-logo.png";
@@ -61,12 +59,12 @@ class NeonTrail {
 }
 
 const Home = () => {
-  const navigate = useNavigate();
-  const [users, setUsers] = useState<UserData[]>([]);
+  // const navigate = useNavigate();
   const [error, setError] = useState(false);
   const [loginCheck, setLoginCheck] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [, setUsers] = useState<UserData[]>([]);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const trailsRef = useRef<NeonTrail[]>([]);

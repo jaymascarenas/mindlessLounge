@@ -1,18 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
 import {
   Container,
   Row,
   Col,
   Card,
   CardBody,
-  Button,
-  Form,
-  FormGroup,
-  Label,
-  Input,
 } from "reactstrap";
-import { useParams, useNavigate } from "react-router-dom";
-import { UserData, Post } from "../interfaces/UserData";
 import profilePicture1 from "../assets/images/profilePicture1.jpeg";
 
 export default function Profile() {
