@@ -1,5 +1,5 @@
 import { useState, useEffect, type FormEvent, type ChangeEvent } from "react";
-import { Container, Form, FormGroup, Label, Input, Button } from "reactstrap";
+import { Container, Form, FormGroup, Label, Input } from "reactstrap";
 
 import Auth from "../utils/auth";
 import { signup } from "../api/authAPI";

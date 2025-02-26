@@ -1,6 +1,5 @@
 import { Container, Row, Col, Card, CardBody, Button } from "reactstrap";
 import brainIcon from "../assets/images/brain-icon.png";
-import mindlessLogo from "../assets/images/mindless-logo-full.png";
 import { useEffect } from "react";
 import Auth from "../utils/auth";
 
@@ -8,7 +7,7 @@ export default function Feed() {
   useEffect(() => {
     const fetchWeather = async () => {
       try {
-        const response = await fetch("/api/news", {
+        const response = await fetch("http://localhost:5000/api/news", {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${Auth.getToken()}`,
