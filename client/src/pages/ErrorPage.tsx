@@ -53,7 +53,7 @@ const ErrorPage = () => {
         </p>
 
         <Link
-          to="/"
+          to="/feed"
           style={{
             backgroundColor: "#2A4374",
             color: "white",
@@ -73,7 +73,7 @@ const ErrorPage = () => {
             e.currentTarget.style.transform = "scale(1)";
           }}
         >
-          Return to Home
+          Return to Feed
         </Link>
       </div>
     </div>
