@@ -2,6 +2,7 @@ import { Container, Row, Col, Card, CardBody, Button } from "reactstrap";
 import brainIcon from "../assets/images/brain-icon.png";
 import { useEffect } from "react";
 import Auth from "../utils/auth";
+import { Link } from "react-router-dom";
 
 export default function Feed() {
   useEffect(() => {
@@ -86,6 +87,8 @@ export default function Feed() {
                 color="light"
                 outline
                 className="border border-danger px-4 me-2"
+                tag={Link}
+                to="/post"
               >
                 POST
               </Button>

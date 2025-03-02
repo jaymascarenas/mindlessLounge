@@ -1,10 +1,4 @@
-import {
-  Container,
-  Row,
-  Col,
-  Card,
-  CardBody,
-} from "reactstrap";
+import { Container, Row, Col, Card, CardBody } from "reactstrap";
 import profilePicture1 from "../assets/images/profilePicture1.jpeg";
 
 export default function Profile() {
@@ -16,7 +10,6 @@ export default function Profile() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        // justifyContent: "center",
         borderRadius: "10px",
         boxShadow: "4px 6px 8px rgba(0, 0, 0, 0.3)",
         padding: "20px",
