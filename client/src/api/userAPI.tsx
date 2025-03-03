@@ -1,3 +1,4 @@
+import { UserData } from "../interfaces/UserData";
 import Auth from "../utils/auth";
 
 const retrieveUsers = async () => {
@@ -45,4 +46,29 @@ const createPost = async (content: string) => {
   }
 };
 
-export { retrieveUsers, createPost };
+const retrieveUserData = async (): Promise<UserData> => {
+  try {
+    const response = await fetch("/api/users/me", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Auth.getToken()}`,
+      },
+    });
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to fetch user data");
+    }
+
+    // Ensure that posts are included in the response
+    return {
+      ...data,
+      posts: data.posts || [],
+    };
+  } catch (err) {
+    console.error("Error fetching user data:", err);
+    throw err;
+  }
+};
+
+export { retrieveUsers, createPost, retrieveUserData };

@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 export default function Feed() {
   useEffect(() => {
-    const fetchWeather = async () => {
+    const fetchNews = async () => {
       try {
         const response = await fetch("http://localhost:5000/api/news", {
           headers: {
@@ -26,7 +26,7 @@ export default function Feed() {
         return [];
       }
     };
-    fetchWeather();
+    fetchNews();
   });
   return (
     <div
