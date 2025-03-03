@@ -1,187 +1,130 @@
-The Mindless Lounge
+# The Mindless Lounge
 
-Table of Contents
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
-Project Overview
+## Table of Contents
 
-Features
+- [Project Overview](#project-overview)
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Deployment](#deployment)
+- [Future Enhancements](#future-enhancements)
+- [Contributors](#contributors)
+- [License](#license)
 
-Technologies Used
-
-Installation
-
-Usage
-
-API Endpoints
-
-Authentication & Security
-
-Deployment
-
-Future Enhancements
-
-Contributors
-
-License
-
-Project Overview
+## Project Overview
 
 The Mindless Lounge is a social media platform where users can share their thoughts in real-time and engage with posts from other users on their personalized feed. Designed to be a simple and intuitive way to express oneself without barriers, this application fosters spontaneous and free-flowing digital interactions.
 
-Features
+## Features
 
-RESTful API: Built with Node.js and Express.js for seamless backend communication.
+- RESTful API: Built with Node.js and Express.js for seamless backend communication.
 
-Modern Front-End: Developed using React to deliver a dynamic and responsive user experience.
+- Modern Front-End: Developed using React to deliver a dynamic and responsive user experience.
 
-Database Integration: Uses PostgreSQL with Sequelize ORM for efficient data handling.
+- Database Integration: Uses PostgreSQL with Sequelize ORM for efficient data handling.
 
-User Authentication: Secure JWT-based authentication for user access management.
+- User Authentication: Secure JWT-based authentication for user access management.
 
-Real-Time Feed: Users can see posts from others in an engaging, chronological feed.
+- Server-Side APIs: Incorporates at least two external APIs to enhance functionality.
 
-Server-Side APIs: Incorporates at least two external APIs to enhance functionality.
+- Environment Variables: Ensures security by protecting API keys and sensitive data.
 
-Environment Variables: Ensures security by protecting API keys and sensitive data.
+- Deployment: Live application deployed on Render with full database integration.
 
-Deployment: Live application deployed on Render with full database integration.
+- Polished UI: A sleek and intuitive user interface designed for seamless navigation.
 
-Polished UI: A sleek and intuitive user interface designed for seamless navigation.
+- Interactive Experience: Application dynamically responds to user input and interactions.
 
-Fully Responsive: Optimized for multiple screen sizes and devices.
+## Technologies Used
 
-Interactive Experience: Application dynamically responds to user input and interactions.
+- Backend: Node.js, Express.js, PostgreSQL, Sequelize ORM
 
-Technologies Used
+- Frontend: React, React Router, Bootstrap/Reactstrap
 
-Backend: Node.js, Express.js, PostgreSQL, Sequelize ORM
+- Authentication: JSON Web Tokens (JWT)
 
-Frontend: React, React Router, CSS Frameworks
+- APIs: Integration of at least two server-side APIs
 
-Authentication: JSON Web Tokens (JWT)
+- Version Control: Git, GitHub
 
-APIs: Integration of at least two server-side APIs
+- Deployment: Render (for both frontend and backend)
 
-Version Control: Git, GitHub
+## Installation
 
-Deployment: Render (for both frontend and backend)
-
-Security: Environment variables, encrypted credentials
-
-Installation
-
-Prerequisites
+### Prerequisites
 
 Ensure you have the following installed on your system:
 
-Node.js
+1. Node.js
 
-PostgreSQL
+2. PostgreSQL
 
-Git
+3. Git
 
-Setup
+### Setup
 
 Clone the Repository:
 
-git clone https://github.com/pojoto4/mindlessLounge.git
+```
+   git clone https://github.com/pojoto4/mindlessLounge.git
+```
 
 Navigate to Project Directory:
 
-cd the-mindless-lounge
+```
+   cd the-mindless-lounge
+```
 
 Install Dependencies:
 
-npm install
+```
+   npm install
+```
 
-Setup Environment Variables:Create a .env file and add the required API keys and database credentials.
+Set Up Environment Variables:
 
-Run Database Migrations:
-
-npx sequelize db:migrate
+```
+Create a .env file and add the required API keys and database credentials.
+```
 
 Start the Application:
 
+```
 npm start
+```
 
-Usage
+## Usage
 
-Once the application is running, navigate to http://localhost:3000 to access the frontend interface. Users can sign up, log in, post their thoughts, and engage with others through the live feed.
+Once the application is running, navigate to http://localhost:3000 to access the frontend interface. Users can sign up, log in, and post their thoughts.
 
-API Endpoints
+## Deployment
 
-Method  
+This application is deployed on Render and can be accessed at: https://mindlesslounge.onrender.com
 
-Endpoint
+## Future Enhancements:
 
-Description
+- Implement additional user roles and permissions.
 
-GET
+- Enhance UI with animations and improved accessibility features.
 
-/api/posts
+- Expand API integrations for greater functionality.
 
-Retrieves posts from the database
+- Optimize database queries for improved performance.
 
-POST
-
-/api/posts
-
-Adds new posts to the database
-
-POST
-
-/api/auth/login
-
-Authenticates user and returns JWT
-
-POST
-
-/api/auth/signup
-
-Registers a new user
-
-Authentication & Security
-
-JWT Authentication: Secure token-based authentication ensures that only authorized users can access protected resources.
-
-Environment Variables: API keys and database credentials are stored securely in .env files.
-
-Data Protection: Follows industry-standard best practices for secure handling of user information.
-
-Deployment
-
-This application is deployed on Render and can be accessed at:🔗 Live Application🔗 GitHub Repository https://github.com/pojoto4/mindlessLounge
-
-Future Enhancements:
-
-Implement additional user roles and permissions.
-
-Enhance UI with animations and improved accessibility features.
-
-Expand API integrations for greater functionality.
-
-Optimize database queries for improved performance.
-
-Introduce real-time notifications and WebSocket integration.
-
-Contributors
+## Contributors
 
 This project was developed by:
 
-Justin 
+- Justin D
+- Shauna D
+- Joe M
+- Sydney S
 
-Shauna 
-
-Joe 
-
-Sydney 
-
-Contributions are welcome! Please follow the contribution guidelines before submitting pull requests.
-
-License
+## License
 
 This project is licensed under the MIT License.
 
-For more information, visit our GitHub Repository.
-
-https://github.com/pojoto4/mindlessLounge
+For more information, visit our GitHub Repository: https://github.com/pojoto4/mindlessLounge
