@@ -12,7 +12,6 @@ export default function Profile() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        // Assume you have a function to fetch user data
         const fetchedUserData = await retrieveUserData();
         setUserData(fetchedUserData);
       } catch (err) {
