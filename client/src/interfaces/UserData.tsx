@@ -10,7 +10,6 @@ export interface UserData {
   id: number;
   username: string;
   email: string;
-  aboutMe: string;
   profilePicture: string;
   posts: Post[];
 }
