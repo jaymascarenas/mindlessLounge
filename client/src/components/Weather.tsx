@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { getWeather } from '../api/weatherAPI';
-import { getWeather } from "src/api/weatherAPI";
+import React, { useEffect, useState } from "react";
+import { getWeather } from "../api/weather.API";
+import { WeatherData } from "../interfaces/WeatherData";
 
 const Weather: React.FC = () => {
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
@@ -15,7 +15,7 @@ const Weather: React.FC = () => {
         setWeatherData(data);
         setError(null);
       } catch (err) {
-        setError('Failed to load weather data');
+        setError("Failed to load weather data");
         console.error(err);
       } finally {
         setLoading(false);
@@ -33,10 +33,12 @@ const Weather: React.FC = () => {
     <div className="weather-widget">
       <h5 className="text-center fw-bold">Weather</h5>
       <div className="text-center mb-3">
-        <h6>{weatherData.name}, {weatherData.sys.country}</h6>
+        <h6>
+          {weatherData.name}, {weatherData.sys.country}
+        </h6>
         <div className="d-flex justify-content-center align-items-center">
-          <img 
-            src={`http://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`} 
+          <img
+            src={`http://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`}
             alt={weatherData.weather[0].description}
             style={{ width: "50px", height: "50px" }}
           />
@@ -45,9 +47,16 @@ const Weather: React.FC = () => {
         <div>{weatherData.weather[0].description}</div>
       </div>
       <div className="weather-details small">
-        <div><strong>Feels like:</strong> {Math.round(weatherData.main.feels_like)}°C</div>
-        <div><strong>Humidity:</strong> {weatherData.main.humidity}%</div>
-        <div><strong>Wind:</strong> {weatherData.wind.speed} m/s</div>
+        <div>
+          <strong>Feels like:</strong> {Math.round(weatherData.main.feels_like)}
+          °C
+        </div>
+        <div>
+          <strong>Humidity:</strong> {weatherData.main.humidity}%
+        </div>
+        <div>
+          <strong>Wind:</strong> {weatherData.wind.speed} m/s
+        </div>
       </div>
     </div>
   );
