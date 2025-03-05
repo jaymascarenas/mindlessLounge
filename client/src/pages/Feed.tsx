@@ -1,4 +1,4 @@
-import { Container, Row, Col, Card, CardBody, Button } from "reactstrap";
+import { Container, Row, Col, Card, CardBody, Button, Input, InputGroup } from "reactstrap";
 import brainIcon from "../assets/images/brain-icon.png";
 import { useEffect, useState } from "react";
 import Auth from "../utils/auth";
@@ -46,62 +46,110 @@ const Weather = () => {
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [city, setCity] = useState<string>('London');
+  const [inputCity, setInputCity] = useState<string>('');
+
+  const fetchWeather = async (cityName: string) => {
+    try {
+      setLoading(true);
+      const response = await fetch(`http://localhost:3000/api/weather?city=${cityName}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${Auth.getToken()}`,
+        },
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Weather API request failed with status ${response.status}`);
+      }
+      
+      const data = await response.json();
+      setWeatherData(data);
+      setError(null);
+    } catch (err) {
+      setError('Failed to load weather data. City may not exist or there may be a connection issue.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchWeather = async () => {
-      try {
-        setLoading(true);
-        // Default to London
-        const city = 'London';
-        const response = await fetch(`http://localhost:3000/api/weather?city=${city}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${Auth.getToken()}`,
-          },
-        });
-        
-        if (!response.ok) {
-          throw new Error(`Weather API request failed with status ${response.status}`);
-        }
-        
-        const data = await response.json();
-        setWeatherData(data);
-        setError(null);
-      } catch (err) {
-        setError('Failed to load weather data');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+    fetchWeather(city);
+  }, [city]);
 
-    fetchWeather();
-  }, []);
+  const handleCityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputCity(e.target.value);
+  };
 
-  if (loading) return <div>Loading weather...</div>;
-  if (error) return <div>{error}</div>;
-  if (!weatherData) return null;
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (inputCity.trim()) {
+      setCity(inputCity.trim());
+      setInputCity('');
+    }
+  };
+
+  // Popular cities for quick selection
+  const popularCities = ['London', 'New York', 'Tokyo', 'Paris', 'Sydney'];
 
   return (
     <div className="weather-widget">
       <h5 className="text-center fw-bold">Weather</h5>
-      <div className="text-center mb-3">
-        <h6>{weatherData.name}, {weatherData.sys.country}</h6>
-        <div className="d-flex justify-content-center align-items-center">
-          <img 
-            src={`http://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`} 
-            alt={weatherData.weather[0].description}
-            style={{ width: "50px", height: "50px" }}
+      
+      <form onSubmit={handleSubmit} className="mb-3">
+        <InputGroup size="sm">
+          <Input 
+            type="text" 
+            placeholder="Enter city name" 
+            value={inputCity} 
+            onChange={handleCityChange}
           />
-          <span className="fs-4">{Math.round(weatherData.main.temp)}°C</span>
+          <Button color="primary" type="submit">Search</Button>
+        </InputGroup>
+      </form>
+      
+      <div className="popular-cities mb-3">
+        <div className="d-flex flex-wrap justify-content-center gap-1">
+          {popularCities.map((popularCity) => (
+            <Button 
+              key={popularCity} 
+              color="light" 
+              size="sm" 
+              className="mb-1" 
+              onClick={() => setCity(popularCity)}
+            >
+              {popularCity}
+            </Button>
+          ))}
         </div>
-        <div>{weatherData.weather[0].description}</div>
       </div>
-      <div className="weather-details small">
-        <div><strong>Feels like:</strong> {Math.round(weatherData.main.feels_like)}°C</div>
-        <div><strong>Humidity:</strong> {weatherData.main.humidity}%</div>
-        <div><strong>Wind:</strong> {weatherData.wind.speed} m/s</div>
-      </div>
+
+      {loading ? (
+        <div className="text-center">Loading weather...</div>
+      ) : error ? (
+        <div className="text-danger">{error}</div>
+      ) : weatherData ? (
+        <>
+          <div className="text-center mb-3">
+            <h6>{weatherData.name}, {weatherData.sys.country}</h6>
+            <div className="d-flex justify-content-center align-items-center">
+              <img 
+                src={`http://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`} 
+                alt={weatherData.weather[0].description}
+                style={{ width: "50px", height: "50px" }}
+              />
+              <span className="fs-4">{Math.round(weatherData.main.temp)}°C</span>
+            </div>
+            <div>{weatherData.weather[0].description}</div>
+          </div>
+          <div className="weather-details small">
+            <div><strong>Feels like:</strong> {Math.round(weatherData.main.feels_like)}°C</div>
+            <div><strong>Humidity:</strong> {weatherData.main.humidity}%</div>
+            <div><strong>Wind:</strong> {weatherData.wind.speed} m/s</div>
+          </div>
+        </>
+      ) : null}
     </div>
   );
 };
