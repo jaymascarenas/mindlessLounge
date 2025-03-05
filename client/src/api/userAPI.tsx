@@ -60,7 +60,6 @@ const retrieveUserData = async (): Promise<UserData> => {
       throw new Error(data.message || "Failed to fetch user data");
     }
 
-    // Ensure that posts are included in the response
     return {
       ...data,
       posts: data.posts || [],

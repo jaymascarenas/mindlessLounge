@@ -74,7 +74,6 @@ const NavbarComponent = () => {
             }}
             onClick={() => {
               auth.logout();
-              // Redirect or update app state after logout
             }}
             block
           >

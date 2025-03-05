@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
-import error404Image from "../assets/images/error-404.png"; // Adjust path as needed
+import error404Image from "../assets/images/error-404.png";
 
 const ErrorPage = () => {
   return (
     <div
       style={{
         minHeight: "100vh",
-        backgroundColor: "#86A7E8", // Matching your homepage background
+        backgroundColor: "#86A7E8",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",

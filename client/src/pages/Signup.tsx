@@ -28,7 +28,7 @@ const Signup = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      const data = await signup(signupData); // a token
+      const data = await signup(signupData);
       Auth.login(data.token);
     } catch (err) {
       console.error("Failed to login", err);
@@ -36,10 +36,8 @@ const Signup = () => {
   };
 
   useEffect(() => {
-    // Set the background color when the component mounts
     document.body.style.backgroundColor = "#DCB7EA";
 
-    // Reset the background color when the component unmounts
     return () => {
       document.body.style.backgroundColor = "";
     };
@@ -118,7 +116,7 @@ const Signup = () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              height: "100%", // or a specific height if needed
+              height: "100%",
             }}
           >
             <button

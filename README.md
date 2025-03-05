@@ -103,6 +103,7 @@ Once the application is running, navigate to http://localhost:3000 to access the
 ## Deployment
 
 This application is deployed on Render and can be accessed at: https://mindlesslounge.onrender.com
+![screenshot of the mindless lounge feed](./client/src/assets/images/screenshotfeed.png)
 
 ## Future Enhancements:
 

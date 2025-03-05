@@ -1,4 +1,13 @@
-import { Container, Row, Col, Card, CardBody, Button, Input, InputGroup } from "reactstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  CardBody,
+  Button,
+  Input,
+  InputGroup,
+} from "reactstrap";
 import brainIcon from "../assets/images/brain-icon.png";
 import { useEffect, useState } from "react";
 import Auth from "../utils/auth";
@@ -32,42 +41,40 @@ interface WeatherData {
   };
 }
 
-function shuffleArray<T>(array: T[]): T[] {
-  const shuffled = [...array];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
-}
-
 // Weather Component
 const Weather = () => {
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [city, setCity] = useState<string>('London');
-  const [inputCity, setInputCity] = useState<string>('');
+  const [city, setCity] = useState<string>("London");
+  const [inputCity, setInputCity] = useState<string>("");
 
   const fetchWeather = async (cityName: string) => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:3000/api/weather?city=${cityName}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${Auth.getToken()}`,
-        },
-      });
-      
+      const response = await fetch(
+        `http://localhost:3000/api/weather?city=${cityName}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${Auth.getToken()}`,
+          },
+        }
+      );
+
       if (!response.ok) {
-        throw new Error(`Weather API request failed with status ${response.status}`);
+        throw new Error(
+          `Weather API request failed with status ${response.status}`
+        );
       }
-      
+
       const data = await response.json();
       setWeatherData(data);
       setError(null);
     } catch (err) {
-      setError('Failed to load weather data. City may not exist or there may be a connection issue.');
+      setError(
+        "Failed to load weather data. City may not exist or there may be a connection issue."
+      );
       console.error(err);
     } finally {
       setLoading(false);
@@ -86,37 +93,39 @@ const Weather = () => {
     e.preventDefault();
     if (inputCity.trim()) {
       setCity(inputCity.trim());
-      setInputCity('');
+      setInputCity("");
     }
   };
 
   // Popular cities for quick selection
-  const popularCities = ['London', 'New York', 'Tokyo', 'Paris', 'Sydney'];
+  const popularCities = ["London", "New York", "Tokyo", "Paris", "Sydney"];
 
   return (
     <div className="weather-widget">
       <h5 className="text-center fw-bold">Weather</h5>
-      
+
       <form onSubmit={handleSubmit} className="mb-3">
         <InputGroup size="sm">
-          <Input 
-            type="text" 
-            placeholder="Enter city name" 
-            value={inputCity} 
+          <Input
+            type="text"
+            placeholder="Enter city name"
+            value={inputCity}
             onChange={handleCityChange}
           />
-          <Button color="primary" type="submit">Search</Button>
+          <Button color="primary" type="submit">
+            Search
+          </Button>
         </InputGroup>
       </form>
-      
+
       <div className="popular-cities mb-3">
         <div className="d-flex flex-wrap justify-content-center gap-1">
           {popularCities.map((popularCity) => (
-            <Button 
-              key={popularCity} 
-              color="light" 
-              size="sm" 
-              className="mb-1" 
+            <Button
+              key={popularCity}
+              color="light"
+              size="sm"
+              className="mb-1"
               onClick={() => setCity(popularCity)}
             >
               {popularCity}
@@ -132,27 +141,48 @@ const Weather = () => {
       ) : weatherData ? (
         <>
           <div className="text-center mb-3">
-            <h6>{weatherData.name}, {weatherData.sys.country}</h6>
+            <h6>
+              {weatherData.name}, {weatherData.sys.country}
+            </h6>
             <div className="d-flex justify-content-center align-items-center">
-              <img 
-                src={`http://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`} 
+              <img
+                src={`http://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`}
                 alt={weatherData.weather[0].description}
                 style={{ width: "50px", height: "50px" }}
               />
-              <span className="fs-4">{Math.round(weatherData.main.temp)}°C</span>
+              <span className="fs-4">
+                {Math.round(weatherData.main.temp)}°C
+              </span>
             </div>
             <div>{weatherData.weather[0].description}</div>
           </div>
           <div className="weather-details small">
-            <div><strong>Feels like:</strong> {Math.round(weatherData.main.feels_like)}°C</div>
-            <div><strong>Humidity:</strong> {weatherData.main.humidity}%</div>
-            <div><strong>Wind:</strong> {weatherData.wind.speed} m/s</div>
+            <div>
+              <strong>Feels like:</strong>{" "}
+              {Math.round(weatherData.main.feels_like)}°C
+            </div>
+            <div>
+              <strong>Humidity:</strong> {weatherData.main.humidity}%
+            </div>
+            <div>
+              <strong>Wind:</strong> {weatherData.wind.speed} m/s
+            </div>
           </div>
         </>
       ) : null}
     </div>
   );
 };
+
+// function that shuffles the top business headlines in our news card
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
 
 export default function Feed() {
   interface Article {
@@ -163,26 +193,26 @@ export default function Feed() {
   const [newsHeadlines, setNewsHeadlines] = useState<Article[]>([]);
   const [userData, setUserData] = useState<UserData | null>(null);
 
-  const fetchNews = async () => {
-    try {
-      const response = await fetch("http://localhost:3000/api/news", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${Auth.getToken()}`,
-        },
-      });
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error("Invalid news API response, check network tab!");
-      }
-      const shuffledArticles = shuffleArray(data.articles as Article[]);
-      setNewsHeadlines(shuffledArticles.slice(0, 3));
-    } catch (err) {
-      console.error("Error fetching news:", err);
-    }
-  };
   useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/api/news", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${Auth.getToken()}`,
+          },
+        });
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error("Invalid news API response, check network tab!");
+        }
+        const shuffledArticles = shuffleArray(data.articles as Article[]);
+        setNewsHeadlines(shuffledArticles.slice(0, 3));
+      } catch (err) {
+        console.error("Error fetching news:", err);
+      }
+    };
     fetchNews();
   }, []);
   useEffect(() => {
@@ -227,7 +257,7 @@ export default function Feed() {
                 </CardBody>
               </Card>
 
-              {/* News/Weather Section */}
+              {/* Sample News/Weather Section */}
               <Card className="border border-dark mb-4">
                 <CardBody className="text-center fw-bold">
                   Top Business Headlines from NewsApi.org
@@ -281,6 +311,7 @@ export default function Feed() {
       </div>
     );
   }
+  //the code above dispplays when the user data isn't populating, so it shows a sample feed
   return (
     <div
       className="min-vh-100 d-flex flex-column bg-primary"
@@ -298,7 +329,7 @@ export default function Feed() {
         >
           Welcome to the Mindless Lounge
         </h1>
-        {/* News/Weather Section */}
+        {/* News Section */}
         <Row className="mb-4">
           <Col md={8}>
             <Card className="border border-dark h-100">
