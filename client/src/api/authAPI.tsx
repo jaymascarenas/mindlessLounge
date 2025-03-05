@@ -33,7 +33,7 @@ const signup = async (userInfo: UserLogin) => {
       body: JSON.stringify(userInfo),
     });
 
-    const data = await response.json(); // is the token
+    const data = await response.json();
 
     if (!response.ok) {
       throw new Error("Error creating user, please try again.");
@@ -46,5 +46,4 @@ const signup = async (userInfo: UserLogin) => {
   }
 };
 
-// Update the export statement to include the new function
 export { login, signup };

@@ -5,26 +5,20 @@ import {
   useRef,
   type FormEvent,
 } from "react";
-import {
-  Link,
-
-  Route,
-  Routes,
-} from "react-router-dom";
+import { Link, Route, Routes } from "react-router-dom";
 import { retrieveUsers } from "../api/userAPI";
 import type { UserData } from "../interfaces/UserData";
 import ErrorPage from "./ErrorPage";
 import auth from "../utils/auth";
 import { login } from "../api/authAPI";
 import { Form, FormGroup, Label, Input } from "reactstrap";
-// Import your images
 import brainMeeting from "../assets/images/brain-meeting.png";
 import mindlessLogo from "../assets/images/mindless-logo.png";
 import mindlessLogoFull from "../assets/images/mindless-logo-full.png";
 import brainIcon from "../assets/images/brain-icon.png";
 import Feed from "./Feed";
 
-// NeonTrail class super cool cursor because I just had too
+// NeonTrail class super cool cursor because I just had to
 class NeonTrail {
   x: number;
   y: number;
